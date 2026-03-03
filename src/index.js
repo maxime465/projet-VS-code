@@ -67,7 +67,7 @@ function create() {
     clavier = this.input.keyboard.createCursorKeys();
     boutonFeu = this.input.keyboard.addKey('A');
 
-    // animations
+    // animations du joueur
     this.anims.create({
         key: "left",
         frames: this.anims.generateFrameNumbers("img_perso", { start: 0, end: 3 }),
@@ -213,11 +213,24 @@ function tirer(player) {
     bullet.body.onWorldBounds = true;
 }
 
-// fonction hit balle / cible
+// fonction hit balle / cible avec animation
 function hit(bullet, cible) {
     cible.pointsVie--;
+
     if (cible.pointsVie === 0) {
-        cible.destroy();
+        // Animation disparition
+        cible.scene.tweens.add({
+            targets: cible,
+            scale: 0,       // rétrécit la cible
+            alpha: 0,       // devient transparente
+            y: cible.y - 20, // petite élévation pour effet
+            duration: 400,  // durée 0,4s
+            ease: 'Power1',
+            onComplete: function() {
+                cible.destroy();
+            }
+        });
     }
+
     bullet.destroy();
 }
